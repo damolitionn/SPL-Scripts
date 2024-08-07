@@ -17,12 +17,11 @@ using Splatoon.Memory;
 using Lumina.Excel.GeneratedSheets2;
 
 namespace SplatoonScriptsOfficial.Duties.Dawntrail;
-public class M1_Quadruple_Crossing : SplatoonScript
+public class R1S_Multiscript : SplatoonScript
 {
     public override HashSet<uint>? ValidTerritories { get; } = new HashSet<uint> { 1226 };
 
     private List<Vector3> clonePositions = new List<Vector3>();
-
 
     public override Metadata? Metadata => new(1, "damolitionn");
 
@@ -754,9 +753,10 @@ public class M1_Quadruple_Crossing : SplatoonScript
         }
     }
 
-    public override void OnCombatEnd()
+    private void Reset()
     {
         IsRegular = false;
+        IsChipper = false;
         IsLeapingCone = false;
         IsLeapingCleave = false;
         LeftFirst = false;
@@ -767,10 +767,24 @@ public class M1_Quadruple_Crossing : SplatoonScript
         jumpTargetPosition = new Vector3(0, 0, 0);
         HideArrows(8);
         HideArrows(9);
+        if (Controller.TryGetElementByName($"Cleaves", out var e1))
+        {
+            e1.Enabled = false;
+        }
+        if (Controller.TryGetElementByName($"CloneCleave", out var e2))
+        {
+            e2.Enabled = false;
+        }
+
+    }
+
+    public override void OnCombatEnd()
+    {
+        Reset();
     }
 
     public override void OnCombatStart()
     {
-        this.OnCombatEnd();
+        Reset();
     }
 }
